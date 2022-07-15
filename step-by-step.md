@@ -37,7 +37,64 @@ npm i --save @nestjs/graphql @nestjs/apollo graphql-tools graphql
 npm i --save apollo-server-express
 ```
 
-### 2.2. Update module
+### 2.2. Hello World
+
+Add `src/hello.resolver.ts`
+
+```ts
+import { Query, Resolver } from "@nestjs/graphql";
+
+@Resolver()
+export class HelloResolver {
+
+    @Query(returns => String)
+    async hello() {
+        return "Hello, World"
+    }
+}
+```
+
+```ts
+import { ApolloDriver } from '@nestjs/apollo';
+import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
+import { HelloResolver } from './hello.resolver';
+
+@Module({
+  imports: [
+    GraphQLModule.forRoot({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      debug: true,
+      playground: true
+    }),
+
+  ],
+  providers: [HelloResolver]
+})
+export class AppModule { }
+```
+
+Open http://localhost:3000/graphql and write
+
+```
+{
+  hello
+}
+```
+
+You'll see
+
+```
+{
+  "data": {
+    "hello": "Hello, World"
+  }
+}
+```
+
+### 2.3. Update module
 
 Update `src/app.module.ts` with the following codes:
 
@@ -58,10 +115,8 @@ import { UserResolver } from './user/user.resolver';
       playground: true
     })
   ],
-  providers: [UserResolver, HobbyResolver]
 })
 export class AppModule { }
-
 ```
 
 - `autoSchemaFile`: code first approach to use TypeScript classes and decorators to generate the GraphQL schema.
@@ -78,7 +133,7 @@ export class AppModule { }
 - @ResolveField
 
 
-### 2.3. Add GraphQL types
+### 2.4. Add GraphQL types
 
 `models/user.model.ts`:
 
@@ -125,7 +180,7 @@ export class Hobby {
 }
 ```
 
-### 2.4 GraphQL resolver
+### 2.5 GraphQL resolver
 
 Use nest CLI to generate resolvers for `User` and `Hobby`.
 
@@ -159,7 +214,7 @@ export class UserResolver {
 }
 ```
 
-### 2.5. ORM ([prisma](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/install-prisma-client-typescript-postgres))
+### 2.6. ORM ([prisma](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/install-prisma-client-typescript-postgres))
 
 ```
 npm install @prisma/client
@@ -283,7 +338,7 @@ export class PrismaService extends PrismaClient
 }
 ```
 
-add `prisma/prisma.service.spec.ts`
+Add `prisma/prisma.service.spec.ts`. For more details, you can read [Use Prisma Client in your NestJS services](https://docs.nestjs.com/recipes/prisma#use-prisma-client-in-your-nestjs-services)
 
 ```ts
 import { Test, TestingModule } from '@nestjs/testing';
@@ -332,11 +387,162 @@ import { UserResolver } from './user/user.resolver';
 export class AppModule { }
 ```
 
-## Run
+Add `user/user.service.ts`
 
+```ts
+import { Injectable } from '@nestjs/common';
+import { Prisma, User } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+
+@Injectable()
+export class UserService {
+    constructor(private prisma: PrismaService) { }
+
+    async user(
+        userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+    ): Promise<User | null> {
+        return this.prisma.user.findUnique({
+            where: userWhereUniqueInput,
+        });
+    }
+
+    async users(params: {
+        skip?: number;
+        take?: number;
+        cursor?: Prisma.UserWhereUniqueInput;
+        where?: Prisma.UserWhereInput;
+        orderBy?: Prisma.UserOrderByWithRelationInput;
+    }): Promise<User[]> {
+        const { skip, take, cursor, where, orderBy } = params;
+        return this.prisma.user.findMany({
+            skip,
+            take,
+            cursor,
+            where,
+            orderBy,
+        });
+    }
+
+    async createUser(data: Prisma.UserCreateInput): Promise<User> {
+        return this.prisma.user.create({
+            data,
+        });
+    }
+
+    async updateUser(params: {
+        where: Prisma.UserWhereUniqueInput;
+        data: Prisma.UserUpdateInput;
+    }): Promise<User> {
+        const { where, data } = params;
+        return this.prisma.user.update({
+            data,
+            where,
+        });
+    }
+
+    async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+        return this.prisma.user.delete({
+            where,
+        });
+    }
+}
 ```
-npm run start:dev
+
+Add `src/hobby/hobby.service.ts`
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { Hobby, Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+
+@Injectable()
+export class HobbyService {
+    constructor(private prisma: PrismaService) { }
+
+    async Hobby(
+        HobbyWhereUniqueInput: Prisma.HobbyWhereUniqueInput,
+    ): Promise<Hobby | null> {
+        return this.prisma.hobby.findUnique({
+            where: HobbyWhereUniqueInput,
+        });
+    }
+
+    async Hobbys(params: {
+        skip?: number;
+        take?: number;
+        cursor?: Prisma.HobbyWhereUniqueInput;
+        where?: Prisma.HobbyWhereInput;
+        orderBy?: Prisma.HobbyOrderByWithRelationInput;
+    }): Promise<Hobby[]> {
+        const { skip, take, cursor, where, orderBy } = params;
+        return this.prisma.hobby.findMany({
+            skip,
+            take,
+            cursor,
+            where,
+            orderBy,
+        });
+    }
+
+    async createHobby(data: Prisma.HobbyCreateInput): Promise<Hobby> {
+        return this.prisma.hobby.create({
+            data,
+        });
+    }
+
+    async updateHobby(params: {
+        where: Prisma.HobbyWhereUniqueInput;
+        data: Prisma.HobbyUpdateInput;
+    }): Promise<Hobby> {
+        const { data, where } = params;
+        return this.prisma.hobby.update({
+            data,
+            where,
+        });
+    }
+
+    async deleteHobby(where: Prisma.HobbyWhereUniqueInput): Promise<Hobby> {
+        return this.prisma.hobby.delete({
+            where,
+        });
+    }
+}
 ```
+
+> Your UserService and PostService currently wrap the CRUD queries that are available in Prisma Client. In a real world application, the service would also be the place to add business logic to your application. For example, you could have a method called updatePassword inside the UserService that would be responsible for updating the password of a user.
+
+## 2.7. Run
+
+1. Run
+
+    ```
+    npm run start:dev
+    ```
+
+1. Access playground.
+
+    ```
+    http://localhost:3000/graphql
+    ```
+
+1. Check query.
+
+    ```
+    query AllUsers {
+      users {
+        id
+        registeredAt
+        updatedAt
+        email
+        name
+        hobbies {
+          id
+          name
+        }
+      }
+    }
+    ```
+
 
 # References
 - https://notiz.dev/blog/graphql-code-first-with-nestjs-7

@@ -23,4 +23,5 @@ scalar DateTime
 
 type Query {
   users: [User!]!
+  hello: String!
 }
