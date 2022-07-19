@@ -24,13 +24,19 @@ export class UserResolver {
     async createUser(
         @Args('name', { nullable: false }) name: string,
         @Args('email', { nullable: false }) email: string,
-        @Args('password', { nullable: false }) password: string) {
+        @Args('password', { nullable: false }) password: string,
+        @Args('hobby', { nullable: true }) hobby: string) {
         return this.userService.createUser({
             name: name,
             createdAt: new Date(),
             updatedAt: new Date(),
             email: email,
-            password: password
+            password: password,
+            hobbies: {
+                create: {
+                    name: hobby,
+                }
+            }
         });
     }
 }

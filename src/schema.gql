@@ -23,9 +23,10 @@ scalar DateTime
 
 type Query {
   users: [User!]!
+  hobbies: [Hobby!]!
   hello: String!
 }
 
 type Mutation {
-  createUser(name: String!, email: String!, password: String!): User!
+  createUser(name: String!, email: String!, password: String!, hobby: String): User!
 }

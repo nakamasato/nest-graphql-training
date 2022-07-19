@@ -202,14 +202,16 @@ export class AppModule {}
 
 ## [3. GraphQL with apollo and express](https://docs.nestjs.com/graphql/quick-start)
 
-### 2.1. install graphql and apollo-server-express
+https://notiz.dev/blog/graphql-code-first-with-nestjs-7
+
+### 3.1. install graphql and apollo-server-express
 
 ```
 npm i --save @nestjs/graphql @nestjs/apollo graphql-tools graphql
 npm i --save apollo-server-express
 ```
 
-### 2.2. Hello World
+### 3.2. Hello World
 
 1. Add `src/hello.resolver.ts`
 
@@ -267,7 +269,7 @@ npm i --save apollo-server-express
     }
     ```
 
-### 2.3. Update module
+### 3.3. Update module
 
 Update `src/app.module.ts` with the following codes:
 
@@ -306,7 +308,7 @@ export class AppModule { }
 - @ResolveField
 
 
-### 2.4. Add GraphQL types
+### 3.4. Add GraphQL types
 
 `models/user.model.ts`:
 
@@ -353,7 +355,7 @@ export class Hobby {
 }
 ```
 
-### 2.5 GraphQL resolver
+### 3.5 GraphQL resolver
 
 Use nest CLI to generate resolvers for `User` and `Hobby`.
 
@@ -387,7 +389,7 @@ export class UserResolver {
 }
 ```
 
-### 2.6. ORM ([prisma](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/install-prisma-client-typescript-postgres))
+### 3.6. ORM ([prisma](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/install-prisma-client-typescript-postgres))
 
 ```
 npm install @prisma/client
@@ -684,7 +686,7 @@ export class HobbyService {
 
 > Your UserService and PostService currently wrap the CRUD queries that are available in Prisma Client. In a real world application, the service would also be the place to add business logic to your application. For example, you could have a method called updatePassword inside the UserService that would be responsible for updating the password of a user.
 
-## 2.7. Run
+## 3.7. Run
 
 1. Run
 
@@ -716,7 +718,7 @@ export class HobbyService {
     }
     ```
 
-## 2.8. Add `mutation` to UserService (CreateUser).
+## 3.8. Add `mutation` to UserService (CreateUser).
 
 1. Add `createUser` to `src/user/user.resolver.ts`.
 
@@ -848,6 +850,196 @@ export class HobbyService {
           }
         }
         ```
+
+## 3.9. Enable to register and check hobbies
+
+1. Add `hobbies` to `src/hobby/hobby.resolver.ts`.
+
+    ```ts
+    @Resolver()
+    export class HobbyResolver {
+        constructor(
+            private hobbyService: HobbyService
+        ) { }
+        @Query(returns => [Hobby])
+        async hobbies() {
+            return this.hobbyService.Hobbys({});
+        }
+    }
+    ```
+
+1. Check hobbies query.
+
+    ```
+    query hobby {
+      hobbies {
+        id,
+        name
+      }
+    }
+    ```
+
+    ```
+    {
+      "data": {
+        "hobbies": []
+      }
+    }
+    ```
+
+    schema.gql:
+
+    ```diff
+     type Query {
+       users: [User!]!
+    +  hobbies: [Hobby!]!
+       hello: String!
+     }
+    ```
+
+1. Update prisma/schema.prisma
+
+    ```diff
+     model Hobby {
+    -  id     Int    @id
+    +  id     Int    @id @default(autoincrement())
+       name   String
+       User   User?  @relation(fields: [userId], references: [id])
+       userId Int?
+    ```
+
+1. Apply the schema change.
+
+    ```
+    npx prisma migrate dev --name init
+    Need to install the following packages:
+      prisma
+    Ok to proceed? (y) y
+    Environment variables loaded from .env
+    Prisma schema loaded from prisma/schema.prisma
+    Datasource "db": PostgreSQL database "postgres", schema "public" at "localhost:5432"
+
+    Applying migration `20220719122939_init`
+
+    The following migration(s) have been created and applied from new schema changes:
+
+    migrations/
+      └─ 20220719122939_init/
+        └─ migration.sql
+
+    Your database is now in sync with your schema.
+
+    ✔ Generated Prisma Client (4.0.0 | library) to ./node_modules/@prisma/client in 54ms
+    ```
+
+1. Enable to register hobbies when creating user.
+
+    ```ts
+    @Mutation(returns => User)
+    async createUser(
+        @Args('name', { nullable: false }) name: string,
+        @Args('email', { nullable: false }) email: string,
+        @Args('password', { nullable: false }) password: string,
+        @Args('hobby', { nullable: true }) hobby: string) {
+        return this.userService.createUser({
+            name: name,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            email: email,
+            password: password,
+            hobbies: {
+                create: {
+                    name: hobby,
+                }
+            }
+        });
+    ```
+
+1. Check http://localhost:3000/graphql
+
+    ```
+    mutation test {
+      createUser(
+        name: "john",
+        email: "john@email.com",
+        password: "password",
+        hobby: "programming"
+      ) {
+        registeredAt,
+        id,
+        name,
+        hobbies {
+          id,
+          name
+        }
+      }
+    }
+    ```
+
+    Check hobbies
+
+    ```
+    query hobby {
+      hobbies {
+        id,
+        name,
+      }
+    }
+    ```
+
+    ```
+    {
+      "data": {
+        "hobbies": [
+          {
+            "id": 1,
+            "name": "programming"
+          }
+        ]
+      }
+    }
+    ```
+
+    all users:
+
+    ```json
+    {
+      "data": {
+        "users": [
+          {
+            "id": 1,
+            "registeredAt": "2022-07-19T11:39:12.908Z",
+            "updatedAt": "2022-07-19T11:39:12.908Z",
+            "email": "test@email.com",
+            "name": "naka",
+            "hobbies": []
+          },
+          {
+            "id": 3,
+            "registeredAt": "2022-07-19T11:49:16.324Z",
+            "updatedAt": "2022-07-19T11:49:16.324Z",
+            "email": "tanaka@email.com",
+            "name": "tanaka",
+            "hobbies": []
+          },
+          {
+            "id": 4,
+            "registeredAt": "2022-07-19T12:33:27.220Z",
+            "updatedAt": "2022-07-19T12:33:27.220Z",
+            "email": "john@email.com",
+            "name": "john",
+            "hobbies": [
+              {
+                "id": 1,
+                "name": "programming"
+              }
+            ]
+          }
+        ]
+      }
+    }
+    ```
+
 
 # References
 - https://notiz.dev/blog/graphql-code-first-with-nestjs-7
