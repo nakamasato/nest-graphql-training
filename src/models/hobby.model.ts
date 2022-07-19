@@ -2,9 +2,9 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Hobby {
-    @Field(type => Int)
-    id: number;
+  @Field(() => Int)
+  id: number;
 
-    @Field(type => String)
-    name: string;
+  @Field(() => String)
+  name: string;
 }

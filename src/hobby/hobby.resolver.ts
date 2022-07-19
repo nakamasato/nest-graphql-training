@@ -4,11 +4,9 @@ import { HobbyService } from './hobby.service';
 
 @Resolver()
 export class HobbyResolver {
-    constructor(
-        private hobbyService: HobbyService
-    ) { }
-    @Query(returns => [Hobby])
-    async hobbies() {
-        return this.hobbyService.Hobbys({});
-    }
+  constructor(private hobbyService: HobbyService) {}
+  @Query(() => [Hobby])
+  async hobbies() {
+    return this.hobbyService.Hobbys({});
+  }
 }

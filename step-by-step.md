@@ -1048,3 +1048,6 @@ export class HobbyService {
 - [nestjs graphql](https://docs.nestjs.com/graphql/quick-start)
 - [nestjs prisma](https://docs.nestjs.com/recipes/prisma)
 - [nestjs providers](https://docs.nestjs.com/providers)
+- https://zenn.dev/eringiv3/books/a85174531fd56a/viewer/953541
+- https://zenn.dev/kanasugi/articles/edb6474e7fe8e1
+- https://www.prisma.io/docs/concepts/components/prisma-client/crud#create-a-single-record-using-generated-types

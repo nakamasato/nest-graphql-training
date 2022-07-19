@@ -15,9 +15,16 @@ import { UserService } from './user/user.service';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       debug: true,
-      playground: true
+      playground: true,
     }),
   ],
-  providers: [UserResolver, HobbyResolver, HelloResolver, PrismaService, UserService, HobbyService]
+  providers: [
+    UserResolver,
+    HobbyResolver,
+    HelloResolver,
+    PrismaService,
+    UserService,
+    HobbyService,
+  ],
 })
-export class AppModule { }
+export class AppModule {}

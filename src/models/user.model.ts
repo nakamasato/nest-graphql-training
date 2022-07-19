@@ -3,23 +3,23 @@ import { Hobby } from './hobby.model';
 
 @ObjectType()
 export class User {
-    @Field(type => Int)
-    id: number;
+  @Field(() => Int)
+  id: number;
 
-    @Field(type => Date, { name: 'registeredAt' })
-    createdAt: Date;
+  @Field(() => Date, { name: 'registeredAt' })
+  createdAt: Date;
 
-    @Field(type => Date)
-    updatedAt: Date;
+  @Field(() => Date)
+  updatedAt: Date;
 
-    @Field(type => String)
-    email: string;
+  @Field(() => String)
+  email: string;
 
-    password: string;
+  password: string;
 
-    @Field(type => String, { nullable: true })
-    name?: string;
+  @Field(() => String, { nullable: true })
+  name?: string;
 
-    @Field(type => [Hobby])
-    hobbies: Hobby[];
+  @Field(() => [Hobby])
+  hobbies: Hobby[];
 }
