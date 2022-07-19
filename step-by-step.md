@@ -2,6 +2,8 @@
 
 ## [1. Getting Started](https://docs.nestjs.com/cli/overview#installation)
 
+https://docs.nestjs.com/first-steps
+
 1. Install `nest`
 
     ```
@@ -28,7 +30,177 @@
     npm run start:dev
     ```
 
-## [2. GraphQL with apollo and express](https://docs.nestjs.com/graphql/quick-start)
+1. Check http://localhost:3000/
+
+    ```
+    Hello World!
+    ```
+
+## 2. Basics
+
+### [2.1. Controllers](https://docs.nestjs.com/controllers)
+
+![](https://docs.nestjs.com/assets/Controllers_1.png)
+
+A controller's purpose is to receive specific requests for the application. The routing mechanism controls which controller receives which requests.
+
+Example: `GET /cats` will be handled by the controller.
+
+1. Create `cat/cat.controller.ts`.
+
+    ```ts
+    import { Controller, Get } from '@nestjs/common';
+
+    @Controller('cats')
+    export class CatsController {
+      @Get()
+      findAll(): string {
+        return 'This action returns all cats';
+      }
+    }
+    ```
+
+    ※ The response's status code is **always 200 by default**, except for POST requests which use 201
+
+1. Import the new controller in `app.module.ts`.
+
+    ```ts
+    import { Module } from '@nestjs/common';
+    import { CatsController } from './cats/cats.controller';
+
+    @Module({
+      controllers: [CatsController],
+    })
+    export class AppModule {}
+    ```
+
+### [2.2 Provider](https://docs.nestjs.com/providers)
+
+![](https://docs.nestjs.com/assets/Components_1.png)
+
+Many of the basic Nest classes may be treated as a provider – services, repositories, factories, helpers, and so on. The main idea of a provider is that it can be **injected** as a dependency.
+
+1. Create **Service**
+
+    `CatService`: This service will be responsible for data storage and retrieval, and is designed to be used by the CatsController
+
+    You can create service with cli: `nest g service cats`:
+
+    ```ts
+    import { Injectable } from '@nestjs/common';
+    import { Cat } from './interfaces/cat.interface';
+
+    @Injectable()
+    export class CatsService {
+      private readonly cats: Cat[] = [];
+
+      create(cat: Cat) {
+        this.cats.push(cat);
+      }
+
+      findAll(): Cat[] {
+        return this.cats;
+      }
+    }
+    ```
+
+    ```ts
+    export interface Cat {
+      name: string;
+      age: number;
+      breed: string;
+    }
+    ```
+
+1. Use the service in `CatController`.
+
+    ```ts
+    import { Controller, Get, Post, Body } from '@nestjs/common';
+    import { CreateCatDto } from './dto/create-cat.dto';
+    import { CatsService } from './cats.service';
+    import { Cat } from './interfaces/cat.interface';
+
+    @Controller('cats')
+    export class CatsController {
+      constructor(private catsService: CatsService) {}
+
+      @Post()
+      async create(@Body() createCatDto: CreateCatDto) {
+        this.catsService.create(createCatDto);
+      }
+
+      @Get()
+      async findAll(): Promise<Cat[]> {
+        return this.catsService.findAll();
+      }
+    }
+    ```
+
+    `constructor(private catsService: CatsService) {}` CatsService is injected through the class constructor.
+
+1. Provider registeration.
+
+    Now that we have defined a provider (`CatsService`), and we have a consumer of that service (`CatsController`), we need to register the service with Nest so that it can perform the injection. We do this by editing our module file (`app.module.ts`) and adding the service to the providers array of the `@Module()` decorator.
+
+    ```ts
+    import { Module } from '@nestjs/common';
+    import { CatsController } from './cats/cats.controller';
+    import { CatsService } from './cats/cats.service';
+
+    @Module({
+      controllers: [CatsController],
+      providers: [CatsService],
+    })
+    export class AppModule {}
+    ```
+
+### [2.3. Modules](https://docs.nestjs.com/modules)
+
+![](https://docs.nestjs.com/assets/Modules_1.png)
+
+A module is a class annotated with a @Module() decorator. The @Module() decorator provides metadata that Nest makes use of to organize the application structure.
+
+```ts
+@Module({
+  controllers: [],
+  providers: [], // service
+  imports: [], // imported modules required in this module
+  exports: [], // the subset of providers that are provided by this module and should be available in other modules
+})
+```
+
+**Feature module**
+
+The CatsController and CatsService belong to the same application domain. As they are closely related, it makes sense to move them into a feature module.
+
+`cats/cats.module.ts`:
+```ts
+import { Module } from '@nestjs/common';
+import { CatsController } from './cats.controller';
+import { CatsService } from './cats.service';
+
+@Module({
+  controllers: [CatsController],
+  providers: [CatsService],
+})
+export class CatsModule {}
+```
+`app.module.ts`:
+```ts
+import { Module } from '@nestjs/common';
+import { CatsModule } from './cats/cats.module';
+
+@Module({
+  imports: [CatsModule],
+})
+export class AppModule {}
+```
+
+### [2.3. Middleware](https://docs.nestjs.com/middleware)
+
+![](https://docs.nestjs.com/assets/Middlewares_1.png)
+
+## [3. GraphQL with apollo and express](https://docs.nestjs.com/graphql/quick-start)
 
 ### 2.1. install graphql and apollo-server-express
 
@@ -39,60 +211,61 @@ npm i --save apollo-server-express
 
 ### 2.2. Hello World
 
-Add `src/hello.resolver.ts`
+1. Add `src/hello.resolver.ts`
 
-```ts
-import { Query, Resolver } from "@nestjs/graphql";
+    ```ts
+    import { Query, Resolver } from "@nestjs/graphql";
 
-@Resolver()
-export class HelloResolver {
+    @Resolver()
+    export class HelloResolver {
 
-    @Query(returns => String)
-    async hello() {
-        return "Hello, World"
+        @Query(returns => String)
+        async hello() {
+            return "Hello, World"
+        }
     }
-}
-```
+    ```
 
-```ts
-import { ApolloDriver } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
-import { HelloResolver } from './hello.resolver';
+1. Add the resolver to `app.module.ts`
 
-@Module({
-  imports: [
-    GraphQLModule.forRoot({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      debug: true,
-      playground: true
-    }),
+    ```ts
+    import { ApolloDriver } from '@nestjs/apollo';
+    import { Module } from '@nestjs/common';
+    import { GraphQLModule } from '@nestjs/graphql';
+    import { join } from 'path';
+    import { HelloResolver } from './hello.resolver';
 
-  ],
-  providers: [HelloResolver]
-})
-export class AppModule { }
-```
+    @Module({
+      imports: [
+        GraphQLModule.forRoot({
+          driver: ApolloDriver,
+          autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+          debug: true,
+          playground: true
+        }),
+      ],
+      providers: [HelloResolver]
+    })
+    export class AppModule { }
+    ```
 
-Open http://localhost:3000/graphql and write
+1. Open http://localhost:3000/graphql and write
 
-```
-{
-  hello
-}
-```
+    ```
+    {
+      hello
+    }
+    ```
 
-You'll see
+    You'll see
 
-```
-{
-  "data": {
-    "hello": "Hello, World"
-  }
-}
-```
+    ```
+    {
+      "data": {
+        "hello": "Hello, World"
+      }
+    }
+    ```
 
 ### 2.3. Update module
 
@@ -543,11 +716,143 @@ export class HobbyService {
     }
     ```
 
+## 2.8. Add `mutation` to UserService (CreateUser).
+
+1. Add `createUser` to `src/user/user.resolver.ts`.
+
+    Use userService to manipulate user.
+
+    ```ts
+    import { UserService } from './user.service';
+    ...
+    @Mutation(returns => User)
+    async createUser(
+        @Args('name', { nullable: false }) name: string,
+        @Args('email', { nullable: false }) email: string,
+        @Args('password', { nullable: false }) password: string) {
+        return this.userService.createUser({
+            name: name,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            email: email,
+            password: password
+        });
+    }
+    ```
+
+1. Update query and reolve field too.
+
+    - Add `HobbyService` in constructor.
+    - Remove `PrismaService` from constructor.
+    - Use userService and hobbyService instead of directly calling PrismaService.
+
+    ```ts
+    constructor(
+        private userService: UserService,
+        private hobbyService: HobbyService,
+    ) { }
+
+    @Query(returns => [User])
+    async users() {
+        return this.userService.users({});
+    }
+
+    @ResolveField()
+    async hobbies(@Parent() user: User) {
+        return this.hobbyService.Hobbys({ where: { userId: user.id } })
+    }
+    ```
+
+1. Update `app.modules.ts`.
+
+    ```ts
+    import { HobbyService } from './hobby/hobby.service';
+    import { UserService } from './user/user.service';
+    providers: [UserResolver, HobbyResolver, HelloResolver, PrismaService, UserService, HobbyService]
+    ```
+
+1. Run `npm run start:dev`
+
+    `schema.gql` is updated (code first).
+
+    ```
+    type Mutation {
+      createUser(name: String!, email: String!, password: String!): User!
+    }
+    ```
+1. Check on localhost:3000/graphql
+
+    1. Create a user
+
+        ```
+        mutation test {
+          createUser(name: "naka", email: "test@email.com", password: "password") {registeredAt, id, name}
+        }
+        ```
+
+        ```
+        mutation test {
+          createUser(name: "tanaka", email: "tanaka@email.com", password: "password") {registeredAt, id, name}
+        }
+        ```
+
+    1. Get all users.
+
+        ```
+            query AllUsers {
+              users {
+                id
+                registeredAt
+                updatedAt
+                email
+                name
+                hobbies {
+                  id
+                  name
+                }
+              }
+            }
+        ```
+
+        ```
+        {
+          "data": {
+            "users": [
+              {
+                "id": 1,
+                "registeredAt": "2022-07-19T11:39:12.908Z",
+                "updatedAt": "2022-07-19T11:39:12.908Z",
+                "email": "test@email.com",
+                "name": "naka",
+                "hobbies": [
+                  {
+                    "id": 1,
+                    "name": "naka"
+                  }
+                ]
+              },
+              {
+                "id": 3,
+                "registeredAt": "2022-07-19T11:49:16.324Z",
+                "updatedAt": "2022-07-19T11:49:16.324Z",
+                "email": "tanaka@email.com",
+                "name": "tanaka",
+                "hobbies": [
+                  {
+                    "id": 3,
+                    "name": "tanaka"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+        ```
 
 # References
 - https://notiz.dev/blog/graphql-code-first-with-nestjs-7
 - https://www.prisma.io/docs/concepts/components/prisma-schema
 - [How to create your first NestJS GraphQL Application?](https://progressivecoder.com/how-to-create-your-first-nestjs-graphql-application/)
-- [nstjs graphql](https://docs.nestjs.com/graphql/quick-start)
+- [nestjs graphql](https://docs.nestjs.com/graphql/quick-start)
 - [nestjs prisma](https://docs.nestjs.com/recipes/prisma)
 - [nestjs providers](https://docs.nestjs.com/providers)
