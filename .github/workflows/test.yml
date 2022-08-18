@@ -31,3 +31,35 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+  e2e:
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14, 16, 18]
+    name: Node ${{ matrix.node }}
+    env:
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/postgres?schema=public"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: "npm"
+      - name: install
+        run: |
+          npm install
+          npx prisma generate
+      - name: run e2e
+        run: |
+          npm run test:e2e
