@@ -49,7 +49,7 @@ jobs:
         node: [14, 16, 18]
     name: e2e - ${{ matrix.node }}
     env:
-      DATABASE_URL: "postgresql://postgres:password@postgres:5432/postgres?schema=public"
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/postgres?schema=public"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
