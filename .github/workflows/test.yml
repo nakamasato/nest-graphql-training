@@ -61,7 +61,7 @@ jobs:
       - name: install
         run: |
           npm install
-          npx prisma generate
+          npx prisma migrate dev --name init
       - name: run e2e
         run: |
           npm run test:e2e
