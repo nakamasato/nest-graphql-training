@@ -1,0 +1,6 @@
+# Exclude locally installed dependencies
+node_modules/
+
+# Exclude git history and configuration.
+.git/
+.gitignore

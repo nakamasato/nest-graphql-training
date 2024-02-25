@@ -22,6 +22,16 @@ You can check how to start nest graphql training here: [step by step](step-by-st
     ```
     docker-compose up -d
     ```
+
+    or use local postgresql
+
+    ```sql
+    psql postgres
+    CREATE USER nest_graphql_training WITH PASSWORD 'nest_graphql_training';
+    ALTER USER nest_graphql_training CREATEDB;
+    ALTER DATABASE nest_graphql_training OWNER TO nest_graphql_training;
+    ```
+
 1. Prepare schema
     ```
     npx prisma migrate dev --name init

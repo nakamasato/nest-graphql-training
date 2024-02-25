@@ -3,23 +3,23 @@ import {
     W3CTraceContextPropagator,
     W3CBaggagePropagator,
 } from '@opentelemetry/core';
-import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
+// import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import { JaegerPropagator } from '@opentelemetry/propagator-jaeger';
 import { B3InjectEncoding, B3Propagator } from '@opentelemetry/propagator-b3';
 const {
     TraceExporter,
 } = require("@google-cloud/opentelemetry-cloud-trace-exporter");
+import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { AsyncLocalStorageContextManager } from '@opentelemetry/context-async-hooks';
 import * as process from 'process';
 
+const env = process.env.ENVIRONMENT || 'development';
 
 const otelSDK = new NodeSDK({
-    // metricReader: new PrometheusExporter({
-    //     port: 8081,
-    // }),
-    spanProcessor: new BatchSpanProcessor(new TraceExporter()),
+    traceExporter: env == "development" ? new ConsoleSpanExporter() : new TraceExporter(),
+    // spanProcessor: new BatchSpanProcessor(),
     contextManager: new AsyncLocalStorageContextManager(),
     textMapPropagator: new CompositePropagator({
         propagators: [
@@ -36,15 +36,3 @@ const otelSDK = new NodeSDK({
 });
 
 export default otelSDK;
-
-// You can also use the shutdown method to gracefully shut down the SDK before process shutdown
-// or on some operating system signal.
-process.on('SIGTERM', () => {
-    otelSDK
-        .shutdown()
-        .then(
-            () => console.log('SDK shut down successfully'),
-            err => console.log('Error shutting down SDK', err)
-        )
-        .finally(() => process.exit(0));
-});
