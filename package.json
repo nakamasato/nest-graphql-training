@@ -21,15 +21,22 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@google-cloud/opentelemetry-cloud-trace-exporter": "^2.1.0",
     "@nestjs/apollo": "10.2.0",
     "@nestjs/common": "9.3.10",
     "@nestjs/core": "9.3.10",
     "@nestjs/graphql": "10.2.0",
     "@nestjs/platform-express": "9.3.10",
+    "@opentelemetry/auto-instrumentations-node": "^0.41.1",
+    "@opentelemetry/instrumentation-express": "^0.34.1",
+    "@opentelemetry/instrumentation-http": "^0.47.0",
+    "@opentelemetry/sdk-node": "^0.47.0",
+    "@opentelemetry/sdk-trace-base": "^1.20.0",
     "@prisma/client": "4.11.0",
     "apollo-server-express": "3.12.0",
     "graphql": "16.6.0",
     "graphql-tools": "8.3.19",
+    "nestjs-otel": "^5.1.5",
     "reflect-metadata": "0.1.13",
     "rimraf": "4.4.0",
     "rxjs": "7.8.0"

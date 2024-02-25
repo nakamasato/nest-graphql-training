@@ -1040,6 +1040,18 @@ export class HobbyService {
     }
     ```
 
+## 4.0. Observability
+
+1. Install dependencies
+    ```
+    npm i nestjs-otel @opentelemetry/sdk-node --save
+    # npm install --save @opentelemetry/sdk-trace-node
+    # npm install --save @opentelemetry/sdk-trace-base
+    npm install --save @google-cloud/opentelemetry-cloud-trace-exporter
+    npm install --save @opentelemetry/auto-instrumentations-node
+    ```
+1. Create `tracing.ts`
+
 
 # References
 - https://notiz.dev/blog/graphql-code-first-with-nestjs-7
@@ -1051,3 +1063,9 @@ export class HobbyService {
 - https://zenn.dev/eringiv3/books/a85174531fd56a/viewer/953541
 - https://zenn.dev/kanasugi/articles/edb6474e7fe8e1
 - https://www.prisma.io/docs/concepts/components/prisma-client/crud#create-a-single-record-using-generated-types
+- trace:
+    - https://www.tomray.dev/nestjs-open-telemetry
+    - https://zenn.dev/monicle/articles/682d406e69b5ba
+    - https://github.com/pragmaticivan/nestjs-otel
+    - https://speakerdeck.com/iinm/monitoring-graphql-api-on-cloud-run
+    - https://cloud.google.com/trace/docs/setup/nodejs-ot
