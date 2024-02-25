@@ -32,7 +32,7 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
       debug: true,
       playground: true,
     }),
-    OpenTelemetryModuleConfig
+    OpenTelemetryModuleConfig,
   ],
   providers: [
     UserResolver,
@@ -43,4 +43,4 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
     HobbyService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

@@ -16,12 +16,14 @@ describe('AppController (e2e)', () => {
   });
 
   it('AllUsers', () => {
-    return request.default(app.getHttpServer())
+    return request
+      .default(app.getHttpServer())
       .post('/graphql')
       .send({
-        operationName: "AllUsers",
-        query: 'query AllUsers {\n  users {\n    id\n  }\n}\n'
-      }).expect(200)
+        operationName: 'AllUsers',
+        query: 'query AllUsers {\n  users {\n    id\n  }\n}\n',
+      })
+      .expect(200)
       .expect((res) => {
         expect(res.body.data.users).toBeDefined();
         expect(res.body.data.users.length).toBe(0);
