@@ -5,9 +5,9 @@ services:
     image: postgres:latest
     container_name: postgres
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=postgres
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=nest_graphql_training
+      - POSTGRES_DB=nest_graphql_training
+      - POSTGRES_PASSWORD=nest_graphql_training
       - TZ=Asia/Tokyo
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
