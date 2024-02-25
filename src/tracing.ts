@@ -7,9 +7,8 @@ import {
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import { JaegerPropagator } from '@opentelemetry/propagator-jaeger';
 import { B3InjectEncoding, B3Propagator } from '@opentelemetry/propagator-b3';
-const {
-  TraceExporter,
-} = require('@google-cloud/opentelemetry-cloud-trace-exporter');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const TraceExporter = require('@google-cloud/opentelemetry-cloud-trace-exporter');
 import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { AsyncLocalStorageContextManager } from '@opentelemetry/context-async-hooks';
