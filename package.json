@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@google-cloud/opentelemetry-cloud-trace-exporter": "^2.1.0",
-    "@nestjs/apollo": "10.2.1",
+    "@nestjs/apollo": "12.1.0",
     "@nestjs/common": "9.4.3",
     "@nestjs/core": "9.4.3",
     "@nestjs/graphql": "12.1.1",
