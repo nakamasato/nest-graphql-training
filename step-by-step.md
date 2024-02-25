@@ -1040,7 +1040,7 @@ export class HobbyService {
     }
     ```
 
-## 4.0. Observability
+## [4.0. Observability - Tracing](https://github.com/nakamasato/nest-graphql-training/pull/426)
 
 1. Install dependencies
     ```
