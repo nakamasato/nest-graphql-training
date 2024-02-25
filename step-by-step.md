@@ -1121,6 +1121,15 @@ export class HobbyService {
 
 1. Check on https://console.cloud.google.com/traces/list
 
+    ![](docs/gcp-cloud-trace.png)
+
+1. Clean up
+
+    ```
+    gcloud run services delete nestjs-graphql-training --project $PROJECT --region ${REGION}
+    gcloud sql instances delete test-db --project $PROJECT
+    ```
+
 # References
 - https://notiz.dev/blog/graphql-code-first-with-nestjs-7
 - https://www.prisma.io/docs/concepts/components/prisma-schema
