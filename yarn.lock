@@ -1300,7 +1300,7 @@
 
 "@opentelemetry/core@1.22.0":
   version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/core/-/core-1.22.0.tgz#a9f33689acd4703ac780c6595497374e2113c7e5"
+  resolved "https://registry.npmjs.org/@opentelemetry/core/-/core-1.22.0.tgz"
   integrity sha512-0VoAlT6x+Xzik1v9goJ3pZ2ppi6+xd3aUfg4brfrLkDBHRIVjMP0eBHrKrhB+NKcDyMAg8fAbGL3Npg/F6AwWA==
   dependencies:
     "@opentelemetry/semantic-conventions" "1.22.0"
@@ -1829,7 +1829,7 @@
 
 "@opentelemetry/resources@1.22.0":
   version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/resources/-/resources-1.22.0.tgz#5b597cdf9fb6e1cd22d7891bd8e72e487929a813"
+  resolved "https://registry.npmjs.org/@opentelemetry/resources/-/resources-1.22.0.tgz"
   integrity sha512-+vNeIFPH2hfcNL0AJk/ykJXoUCtR1YaDUZM+p3wZNU4Hq98gzq+7b43xbkXjadD9VhWIUQqEwXyY64q6msPj6A==
   dependencies:
     "@opentelemetry/core" "1.22.0"
@@ -1880,9 +1880,9 @@
     "@opentelemetry/resources" "1.21.0"
     "@opentelemetry/semantic-conventions" "1.21.0"
 
-"@opentelemetry/sdk-trace-base@^1.22.0":
+"@opentelemetry/sdk-trace-base@^1.20.0":
   version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/sdk-trace-base/-/sdk-trace-base-1.22.0.tgz#7833bf2493a7b49461915ca32aa2884c87afd78c"
+  resolved "https://registry.npmjs.org/@opentelemetry/sdk-trace-base/-/sdk-trace-base-1.22.0.tgz"
   integrity sha512-pfTuSIpCKONC6vkTpv6VmACxD+P1woZf4q0K46nSUvXFvOFqjBYKFaAMkKD3M1mlKUUh0Oajwj35qNjMl80m1Q==
   dependencies:
     "@opentelemetry/core" "1.22.0"
@@ -1908,7 +1908,7 @@
 
 "@opentelemetry/semantic-conventions@1.22.0":
   version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/semantic-conventions/-/semantic-conventions-1.22.0.tgz#d7502533a7c96e25baab86bac965468e0703a8b4"
+  resolved "https://registry.npmjs.org/@opentelemetry/semantic-conventions/-/semantic-conventions-1.22.0.tgz"
   integrity sha512-CAOgFOKLybd02uj/GhCdEeeBjOS0yeoDeo/CA7ASBSmenpZHAKGB3iDm/rv3BQLcabb/OprDEsSQ1y0P8A7Siw==
 
 "@opentelemetry/sql-common@^0.40.0":
@@ -2373,10 +2373,10 @@
     "@types/node" "*"
     form-data "^4.0.0"
 
-"@types/node@*", "@types/node@20.11.22", "@types/node@>=12.12.47", "@types/node@>=13.7.0":
-  version "20.11.22"
-  resolved "https://registry.npmjs.org/@types/node/-/node-20.11.22.tgz"
-  integrity sha512-/G+IxWxma6V3E+pqK1tSl2Fo1kl41pK1yeCyDsgkF9WlVAme4j5ISYM2zR11bgLFJGLN5sVK40T4RJNuiZbEjA==
+"@types/node@*", "@types/node@20.11.23", "@types/node@>=12.12.47", "@types/node@>=13.7.0":
+  version "20.11.23"
+  resolved "https://registry.npmjs.org/@types/node/-/node-20.11.23.tgz"
+  integrity sha512-ZUarKKfQuRILSNYt32FuPL20HS7XwNT7/uRwSV8tiHWfyyVwDLYZNF6DZKc2bove++pgfsXn9sUwII/OsQ82cQ==
   dependencies:
     undici-types "~5.26.4"
 
