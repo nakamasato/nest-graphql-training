@@ -4,13 +4,62 @@
 
 1. Install dependencies
     ```
-    npm i nestjs-otel @opentelemetry/sdk-node --save
-    # npm install --save @opentelemetry/sdk-trace-node
-    # npm install --save @opentelemetry/sdk-trace-base
-    npm install --save @google-cloud/opentelemetry-cloud-trace-exporter
-    npm install --save @opentelemetry/auto-instrumentations-node
+    pnpm i --save @opentelemetry/sdk-trace-base @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node @google-cloud/opentelemetry-cloud-trace-exporter
     ```
 1. Create `tracing.ts`
+
+    ```ts
+    import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
+    import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    import { TraceExporter } from '@google-cloud/opentelemetry-cloud-trace-exporter';
+    import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
+    import { NodeSDK } from '@opentelemetry/sdk-node';
+    import process from 'process';
+
+    const traceExporter =
+      process.env['NODE_ENV'] == 'production'
+        ? new TraceExporter()
+        : new ConsoleSpanExporter();
+
+    export const otelSDK = new NodeSDK({
+      traceExporter: traceExporter,
+      spanProcessor: new BatchSpanProcessor(traceExporter),
+      instrumentations: [getNodeAutoInstrumentations()],
+    });
+
+    export default otelSDK;
+
+    // You can also use the shutdown method to gracefully shut down the SDK before process shutdown
+    // or on some operating system signal.
+    process.on('SIGTERM', () => {
+      otelSDK
+        .shutdown()
+        .then(
+          () => console.log('SDK shut down successfully'),
+          (err) => console.log('Error shutting down SDK', err),
+        )
+        .finally(() => process.exit(0));
+    });
+    ```
+
+1. Update `main.ts`
+
+    ```ts
+    // Make sure to import the SDK before any other modules
+    // eslint-disable-next-line import/order
+    import otelSDK from './tracing';
+    import { NestFactory } from '@nestjs/core';
+    import { AppModule } from './app.module';
+
+    async function bootstrap() {
+      // Start SDK before nestjs factory create
+      await otelSDK.start();
+      const app = await NestFactory.create(AppModule);
+      await app.listen(3000);
+    }
+    bootstrap();
+    ```
 
 1. Create Cloud SQL (https://zenn.dev/razokulover/articles/f8dd01db6c1e95)
 
