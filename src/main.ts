@@ -1,5 +1,4 @@
 // Make sure to import the SDK before any other modules
-// eslint-disable-next-line import/order
 import otelSDK from './tracing';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
