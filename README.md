@@ -10,11 +10,19 @@
 
 You can check how to start nest graphql training here: [step by step](step-by-step.md)
 
+## Upgrade packages
+
+https://www.npmjs.com/package/npm-check-updates
+
+```
+ncu
+```
+
 ## Running the app
 
 1. Install dependencies
     ```
-    npm install
+    pnpm install
     ```
 
 1. Start database.
@@ -40,13 +48,13 @@ You can check how to start nest graphql training here: [step by step](step-by-st
 
     ```bash
     # development
-    $ npm run start
+    $ pnpm run start
 
     # watch mode
-    $ npm run start:dev
+    $ pnpm run start:dev
 
     # production mode
-    $ npm run start:prod
+    $ pnpm run start:prod
     ```
 1. Send `mutation` request from http://localhost:3000/graphql
 
@@ -96,11 +104,11 @@ You can check how to start nest graphql training here: [step by step](step-by-st
 
 ```bash
 # unit tests
-$ npm run test
+$ pnpm run test
 
 # e2e tests
-$ npm run test:e2e
+$ pnpm run test:e2e
 
 # test coverage
-$ npm run test:cov
+$ pnpm run test:cov
 ```
