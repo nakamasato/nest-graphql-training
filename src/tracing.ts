@@ -1,3 +1,7 @@
+import {
+  CompositePropagator,
+  W3CTraceContextPropagator,
+} from '@opentelemetry/core';
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -13,6 +17,9 @@ const traceExporter =
 
 export const otelSDK = new NodeSDK({
   traceExporter: traceExporter,
+  textMapPropagator: new CompositePropagator({
+    propagators: [new W3CTraceContextPropagator()],
+  }),
   spanProcessor: new BatchSpanProcessor(traceExporter),
   instrumentations: [getNodeAutoInstrumentations()],
 });

@@ -4,11 +4,15 @@
 
 1. Install dependencies
     ```
-    pnpm i --save @opentelemetry/sdk-trace-base @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node @google-cloud/opentelemetry-cloud-trace-exporter
+    pnpm i --save @opentelemetry/sdk-trace-base @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node @google-cloud/opentelemetry-cloud-trace-exporter @opentelemetry/core
     ```
 1. Create `tracing.ts`
 
     ```ts
+    import {
+      CompositePropagator,
+      W3CTraceContextPropagator,
+    } from '@opentelemetry/core';
     import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
     import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -24,6 +28,9 @@
 
     export const otelSDK = new NodeSDK({
       traceExporter: traceExporter,
+      textMapPropagator: new CompositePropagator({
+        propagators: [new W3CTraceContextPropagator()],
+      }),
       spanProcessor: new BatchSpanProcessor(traceExporter),
       instrumentations: [getNodeAutoInstrumentations()],
     });
@@ -42,6 +49,12 @@
         .finally(() => process.exit(0));
     });
     ```
+
+    1. [W3C context propagation](https://www.w3.org/TR/trace-context/)
+    1. [opentelemetry core](https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-core/README.md)
+        1. W3CTraceContextPropagator
+        1. CompositePropagator
+        1. [Baggage Propagation](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/baggage/api.md#baggage-propagation)
 
 1. Update `main.ts`
 
@@ -64,7 +77,7 @@
 1. Create Cloud SQL (https://zenn.dev/razokulover/articles/f8dd01db6c1e95)
 
     ```
-    PROJECT_ID=your-project-id
+    PROJECT=your-project-id
     REGION=asia-northeast1
     gcloud auth login
     DB_ROOT_PASSWORD=$(openssl rand -base64 32)
@@ -96,12 +109,18 @@
         --region $REGION \
         --allow-unauthenticated \
         --add-cloudsql-instances ${PROJECT}:${REGION}:test-db \
-        --set-env-vars="DATABASE_URL=postgresql://postgres:${DB_USER_PASSWORD}@localhost:5432/postgres?host=/cloudsql/${PROJECT}:${REGION}:test-db" \
-        --set-env-vars="ENVIRONMENT=production"
+        --set-env-vars="DATABASE_URL=postgresql://postgres:${DB_USER_PASSWORD}@localhost:5432/postgres?host=/cloudsql/${PROJECT}:${REGION}:test-db"
     ```
 
+    This command builds an image with `NODE_ENV=production` by default.
+
     ```
-    gcloud run deploy nestjs-graphql-training --image [image] --project $PROJECT
+    gcloud run deploy nestjs-graphql-training \
+        --image ${REGION}-docker.pkg.dev/${PROJECT}/cloud-run-source-deploy/nestjs-graphql-training \
+        --add-cloudsql-instances ${PROJECT}:${REGION}:test-db \
+        --set-env-vars="DATABASE_URL=postgresql://postgres:${DB_USER_PASSWORD}@localhost:5432/postgres?host=/cloudsql/${PROJECT}:${REGION}:test-db" \
+        --project $PROJECT \
+        --region $REGION
     ```
 
 1. Test
@@ -170,3 +189,10 @@
     - https://github.com/pragmaticivan/nestjs-otel
     - https://speakerdeck.com/iinm/monitoring-graphql-api-on-cloud-run
     - https://cloud.google.com/trace/docs/setup/nodejs-ot
+
+## FAQ
+
+1. How to trace only for sampled requests by Cloud Run?
+    1. [Cloud Trace - Trace Context](https://cloud.google.com/trace/docs/trace-context#context-propagation-protocols)
+    1. [Cloud Trace - Trace Sampling](https://cloud.google.com/trace/docs/trace-sampling)
+    1. [W3C](https://www.w3.org/TR/trace-context/#traceparent-header)
