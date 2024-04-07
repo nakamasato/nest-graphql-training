@@ -18,6 +18,12 @@ https://www.npmjs.com/package/npm-check-updates
 ncu
 ```
 
+## Format
+
+```
+pnpm format
+```
+
 ## Running the app
 
 1. Install dependencies
