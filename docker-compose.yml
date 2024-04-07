@@ -16,3 +16,20 @@ services:
       retries: 5
     ports:
       - 5433:5432
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://nest_graphql_training:nest_graphql_training@postgres:5432/nest_graphql_training
+    ports:
+      - 3000:3000
+    healthcheck:
+      test: "curl -f http://localhost:3000/health || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      postgres:
+        condition: service_healthy

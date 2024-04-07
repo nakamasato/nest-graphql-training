@@ -14,23 +14,27 @@ jobs:
     name: test - ${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: "npm"
+          cache: pnpm
       - run: |
-          npm install
+          pnpm install --frozen-lockfile
           npx prisma generate
       - uses: kamilkisiela/graphql-inspector@master
         with:
           schema: "main:src/schema.gql"
       - run: |
-          npm run lint
-          npm run test:cov
+          pnpm run lint
+          pnpm run test:cov
       - name: codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
   e2e:
     services:
       postgres:
@@ -54,14 +58,31 @@ jobs:
       DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres?schema=public"
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: "npm"
+          cache: pnpm
       - name: install
         run: |
-          npm install
+          pnpm install
           npx prisma migrate dev --name init
       - name: run e2e
         run: |
-          npm run test:e2e
+          pnpm run test:e2e
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: run the app
+        run: |
+          docker compose up -d --wait
+      - name: send request - mutation
+        run: |
+          curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3000' --data-binary '{"query":"mutation test {\n  createUser(\n    name: \"bob\",\n    email: \"bob@email.com\",\n    password: \"password\",\n    hobby: \"cooking\"\n  ) {\n    registeredAt,\n    id,\n    name,\n    hobbies {\n      id,\n      name\n    }\n  }\n}"}' --compressed
+      - name: send request - query
+        run: |
+          curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3000' --data-binary '{"query":"query hobby {\n  hobbies {\n    id,\n    name,\n  }\n}"}' --compressed
