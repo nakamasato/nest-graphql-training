@@ -16,3 +16,14 @@ services:
       retries: 5
     ports:
       - 5433:5432
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgressql://nest_graphql_training:nest_graphql_training@postgres:5432/nest_graphql_training
+
+    depends_on:
+      postgres:
+        condition: service_healthy
