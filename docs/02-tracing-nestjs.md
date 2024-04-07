@@ -55,7 +55,12 @@
         1. W3CTraceContextPropagator
         1. CompositePropagator
         1. [Baggage Propagation](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/baggage/api.md#baggage-propagation)
-    1. `sampler`
+    1. `sampler`: ParentBasedSampler + TraceIdRatioBasedSampler
+        ```ts
+        sampler: new ParentBasedSampler({
+          root: new TraceIdRatioBasedSampler(0.1), // 10% of requests without parent trace
+        }),
+        ```
     1. `instrumentations`
         1. easiest way to enable auto-instrumentation
             ```ts
@@ -206,8 +211,17 @@
 1. Install
 
     ```
-    npm install @opentelemetry/semantic-conventions @opentelemetry/exporter-trace-otlp-http @opentelemetry/instrumentation @opentelemetry/sdk-trace-base @opentelemetry/sdk-trace-node @opentelemetry/resources
+    pnpm i --save @prisma/instrumentation
     ```
+
+1. Update `tracing.ts`
+
+    ```ts
+    instrumentations: [new PrismaInstrumentation()],
+    ```
+
+1. Cloud Trace
+    ![](gcp-cloud-trace-prisma.png)
 
 ## Ref
 

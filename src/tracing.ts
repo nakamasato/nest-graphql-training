@@ -17,6 +17,7 @@ import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
+import { PrismaInstrumentation } from '@prisma/instrumentation';
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
 
 const traceExporter =
@@ -31,6 +32,7 @@ export const otelSDK = new NodeSDK({
   }),
   spanProcessor: new BatchSpanProcessor(traceExporter),
   instrumentations: [
+    new PrismaInstrumentation(),
     new HttpInstrumentation(),
     new ExpressInstrumentation(),
     new NestInstrumentation(),
