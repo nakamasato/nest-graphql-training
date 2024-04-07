@@ -26,42 +26,54 @@ pnpm format
 
 ## Running the app
 
-1. Install dependencies
+1. Run on local
+
+    1. Install dependencies
+
+        ```
+        pnpm install
+        ```
+
+    1. Start database.
+
+        ```
+        docker-compose up -d postgres
+        ```
+
+        or use local postgresql
+
+        ```sql
+        psql postgres
+        CREATE USER nest_graphql_training WITH PASSWORD 'nest_graphql_training';
+        ALTER USER nest_graphql_training CREATEDB;
+        ALTER DATABASE nest_graphql_training OWNER TO nest_graphql_training;
+        ```
+
+    1. Prepare schema
+
+        ```
+        npx prisma migrate dev --name init
+        ```
+
+    1. Run the app.
+
+        ```bash
+        # development
+        $ pnpm run start
+
+        # watch mode
+        $ pnpm run start:dev
+
+        # production mode
+        $ pnpm run start:prod
+        ```
+
+1. Run with docker
+
     ```
-    pnpm install
+    docker compose up --wait
     ```
 
-1. Start database.
-
-    ```
-    docker-compose up -d
-    ```
-
-    or use local postgresql
-
-    ```sql
-    psql postgres
-    CREATE USER nest_graphql_training WITH PASSWORD 'nest_graphql_training';
-    ALTER USER nest_graphql_training CREATEDB;
-    ALTER DATABASE nest_graphql_training OWNER TO nest_graphql_training;
-    ```
-
-1. Prepare schema
-    ```
-    npx prisma migrate dev --name init
-    ```
-1. Run the app.
-
-    ```bash
-    # development
-    $ pnpm run start
-
-    # watch mode
-    $ pnpm run start:dev
-
-    # production mode
-    $ pnpm run start:prod
-    ```
 1. Send `mutation` request from http://localhost:3000/graphql
 
     ```

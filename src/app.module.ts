@@ -8,6 +8,8 @@ import { HobbyService } from './hobby/hobby.service';
 import { PrismaService } from './prisma/prisma.service';
 import { UserResolver } from './user/user.resolver';
 import { UserService } from './user/user.service';
+import { HealthModule } from './health/health.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { UserService } from './user/user.service';
       debug: true,
       playground: true,
     }),
+    HealthModule,
+    PrismaModule,
   ],
   providers: [
     UserResolver,
