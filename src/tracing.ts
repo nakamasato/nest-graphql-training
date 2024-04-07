@@ -5,8 +5,8 @@ import {
 import {
   AlwaysOnSampler,
   BatchSpanProcessor,
-  ParentBasedSampler,
-  TraceIdRatioBasedSampler,
+  // ParentBasedSampler,
+  // TraceIdRatioBasedSampler,
 } from '@opentelemetry/sdk-trace-base';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { TraceExporter } from '@google-cloud/opentelemetry-cloud-trace-exporter';
