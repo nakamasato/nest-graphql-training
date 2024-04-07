@@ -6,7 +6,9 @@
 - [Express](https://expressjs.com/): a well-known minimalist web framework for node.
 - [GraphQL](https://graphql.org/)
 - [Apollo](https://www.apollographql.com/)
-- [npm](https://www.npmjs.com/)
+- [Prisma](https://www.prisma.io/): ORM
+- [pnpm](https://pnpm.io/): Package Manager
+
 
 You can check how to start nest graphql training here: [step by step](step-by-step.md)
 
