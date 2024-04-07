@@ -55,7 +55,16 @@
         1. W3CTraceContextPropagator
         1. CompositePropagator
         1. [Baggage Propagation](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/baggage/api.md#baggage-propagation)
-
+    1. `sampler`
+    1. `instrumentations`
+        1. easiest way to enable auto-instrumentation
+            ```ts
+            instrumentations: [getNodeAutoInstrumentations()],
+            ```
+        1. selectively enable instrumentations
+            ```ts
+            instrumentations: [new HttpInstrumentation()],
+            ```
 1. Update `main.ts`
 
     ```ts
@@ -86,9 +95,14 @@
         --database-version=POSTGRES_15 \
         --tier db-f1-micro \
         --region $REGION \
+        --insights-config-query-insights-enabled \
+        --insights-config-record-application-tags \
+        --insights-config-record-client-address \
         --root-password=${DB_ROOT_PASSWORD} \
         --project $PROJECT
     ```
+
+    ref: https://cloud.google.com/sql/docs/postgres/using-query-insights#terraform
 
 1. Create a database and user
 
@@ -114,11 +128,18 @@
 
     This command builds an image with `NODE_ENV=production` by default.
 
+
+    build:
+
+    ```
+    gcloud builds submit . --pack "image=${REGION}-docker.pkg.dev/$PROJECT/cloud-run-source-deploy/nestjs-graphql-training" --project ${PROJECT}
+    ```
+
+    deploy:
+
     ```
     gcloud run deploy nestjs-graphql-training \
         --image ${REGION}-docker.pkg.dev/${PROJECT}/cloud-run-source-deploy/nestjs-graphql-training \
-        --add-cloudsql-instances ${PROJECT}:${REGION}:test-db \
-        --set-env-vars="DATABASE_URL=postgresql://postgres:${DB_USER_PASSWORD}@localhost:5432/postgres?host=/cloudsql/${PROJECT}:${REGION}:test-db" \
         --project $PROJECT \
         --region $REGION
     ```
@@ -146,6 +167,16 @@
     ```
     {"data":{"hobbies":[{"id":1,"name":"programming"},{"id":2,"name":"cooking"}]}}
     ```
+
+1. load test
+
+    ```
+    ab -n 1000 -c 10 -H 'Accept-Encoding: gzip, deflate, br' -H \
+        'Accept-Encoding: gzip, deflate, br' \
+        -H 'Accept: application/json' -T 'application/json' \
+        -p test/loadtest/query.txt $URL/graphql
+    ```
+
 
 1. Check on https://console.cloud.google.com/traces/list
 
@@ -196,3 +227,10 @@
     1. [Cloud Trace - Trace Context](https://cloud.google.com/trace/docs/trace-context#context-propagation-protocols)
     1. [Cloud Trace - Trace Sampling](https://cloud.google.com/trace/docs/trace-sampling)
     1. [W3C](https://www.w3.org/TR/trace-context/#traceparent-header)
+    1. [ParentBasedSampler](https://www.npmjs.com/package/@opentelemetry/sdk-trace-base?activeTab=readme)
+
+    ```ts
+    sampler: new ParentBasedSampler({
+      root: new TraceIdRatioBasedSampler(0.1), // 10% of requests without parent trace
+    }),
+    ```

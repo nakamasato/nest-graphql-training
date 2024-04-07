@@ -2,13 +2,22 @@ import {
   CompositePropagator,
   W3CTraceContextPropagator,
 } from '@opentelemetry/core';
-import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import {
+  AlwaysOnSampler,
+  BatchSpanProcessor,
+  ParentBasedSampler,
+  TraceIdRatioBasedSampler,
+} from '@opentelemetry/sdk-trace-base';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { TraceExporter } from '@google-cloud/opentelemetry-cloud-trace-exporter';
-import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
 import { NodeSDK } from '@opentelemetry/sdk-node';
+import { ConsoleSpanExporter } from '@opentelemetry/sdk-trace-node';
 import process from 'process';
+import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
+import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql';
+import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
+import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
+import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
 
 const traceExporter =
   process.env['NODE_ENV'] == 'production'
@@ -21,7 +30,20 @@ export const otelSDK = new NodeSDK({
     propagators: [new W3CTraceContextPropagator()],
   }),
   spanProcessor: new BatchSpanProcessor(traceExporter),
-  instrumentations: [getNodeAutoInstrumentations()],
+  instrumentations: [
+    new HttpInstrumentation(),
+    new ExpressInstrumentation(),
+    new NestInstrumentation(),
+    new GraphQLInstrumentation({ depth: 3, mergeItems: true }),
+    new PgInstrumentation({
+      requireParentSpan: true,
+      addSqlCommenterCommentToQueries: true,
+    }),
+  ],
+  // sampler: new ParentBasedSampler({
+  //   root: new TraceIdRatioBasedSampler(0.1),
+  // }),
+  sampler: new AlwaysOnSampler(),
 });
 
 export default otelSDK;
