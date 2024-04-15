@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@apollo/server": "4.10.2",
+    "@apollo/server": "4.10.3",
     "@google-cloud/opentelemetry-cloud-trace-exporter": "^2.1.0",
     "@nestjs/apollo": "12.1.0",
     "@nestjs/common": "10.3.7",
