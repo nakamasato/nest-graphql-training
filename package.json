@@ -31,7 +31,7 @@
     "@nestjs/terminus": "^10.2.3",
     "@opentelemetry/auto-instrumentations-node": "^0.45.0",
     "@opentelemetry/core": "^1.23.0",
-    "@opentelemetry/instrumentation-express": "^0.38.0",
+    "@opentelemetry/instrumentation-express": "^0.37.0",
     "@opentelemetry/instrumentation-graphql": "^0.39.0",
     "@opentelemetry/instrumentation-http": "^0.51.0",
     "@opentelemetry/instrumentation-nestjs-core": "^0.36.0",
