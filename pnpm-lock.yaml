@@ -39,8 +39,8 @@ dependencies:
     specifier: ^0.37.0
     version: 0.37.0(@opentelemetry/api@1.8.0)
   '@opentelemetry/instrumentation-graphql':
-    specifier: ^0.39.0
-    version: 0.39.0(@opentelemetry/api@1.8.0)
+    specifier: ^0.40.0
+    version: 0.40.0(@opentelemetry/api@1.8.0)
   '@opentelemetry/instrumentation-http':
     specifier: ^0.51.0
     version: 0.51.0(@opentelemetry/api@1.8.0)
@@ -2014,18 +2014,6 @@ packages:
       '@opentelemetry/api': 1.8.0
       '@opentelemetry/instrumentation': 0.51.0(@opentelemetry/api@1.8.0)
       '@opentelemetry/semantic-conventions': 1.24.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /@opentelemetry/instrumentation-graphql@0.39.0(@opentelemetry/api@1.8.0):
-    resolution: {integrity: sha512-TUe4DJJ2S89L45eO3esGrQKvIGVasj7gY4Nk7PecxkgeVnKO5gJ41mlbhUOF44vXxYQq53470FNnhe396+JlBQ==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@opentelemetry/api': ^1.3.0
-    dependencies:
-      '@opentelemetry/api': 1.8.0
-      '@opentelemetry/instrumentation': 0.50.0(@opentelemetry/api@1.8.0)
     transitivePeerDependencies:
       - supports-color
     dev: false
