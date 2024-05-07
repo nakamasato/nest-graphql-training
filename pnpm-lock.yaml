@@ -46,7 +46,7 @@ dependencies:
     version: 0.51.0(@opentelemetry/api@1.8.0)
   '@opentelemetry/instrumentation-nestjs-core':
     specifier: ^0.37.0
-    version: 0.37.0(@opentelemetry/api@1.8.0)
+    version: 0.37.1(@opentelemetry/api@1.8.0)
   '@opentelemetry/instrumentation-pg':
     specifier: ^0.40.0
     version: 0.40.0(@opentelemetry/api@1.8.0)
@@ -1716,7 +1716,7 @@ packages:
       '@opentelemetry/instrumentation-mongoose': 0.38.0(@opentelemetry/api@1.8.0)
       '@opentelemetry/instrumentation-mysql': 0.38.0(@opentelemetry/api@1.8.0)
       '@opentelemetry/instrumentation-mysql2': 0.38.0(@opentelemetry/api@1.8.0)
-      '@opentelemetry/instrumentation-nestjs-core': 0.37.0(@opentelemetry/api@1.8.0)
+      '@opentelemetry/instrumentation-nestjs-core': 0.37.1(@opentelemetry/api@1.8.0)
       '@opentelemetry/instrumentation-net': 0.36.0(@opentelemetry/api@1.8.0)
       '@opentelemetry/instrumentation-pg': 0.41.0(@opentelemetry/api@1.8.0)
       '@opentelemetry/instrumentation-pino': 0.38.0(@opentelemetry/api@1.8.0)
@@ -2198,8 +2198,8 @@ packages:
       - supports-color
     dev: false
 
-  /@opentelemetry/instrumentation-nestjs-core@0.37.0(@opentelemetry/api@1.8.0):
-    resolution: {integrity: sha512-9/ZZ9x9s5ZNcWZYrmqTVIGb0ADNGxYaqR65gznkHzxXUXuckgzw9jaXKaErjWEyouW0FOECVLgeAB9NcjYB57g==}
+  /@opentelemetry/instrumentation-nestjs-core@0.37.1(@opentelemetry/api@1.8.0):
+    resolution: {integrity: sha512-ebYQjHZEmGHWEALwwDGhSQVLBaurFnuLIkZD5igPXrt7ohfF4lc5/4al1LO+vKc0NHk8SJWStuRueT86ISA8Vg==}
     engines: {node: '>=14'}
     peerDependencies:
       '@opentelemetry/api': ^1.3.0
@@ -4276,6 +4276,10 @@ packages:
 
   /es-module-lexer@1.5.0:
     resolution: {integrity: sha512-pqrTKmwEIgafsYZAGw9kszYzmagcE/n4dbgwGWLEXg7J4QFJVQRBld8j3Q3GNez79jzxZshq0bcT962QHOghjw==}
+    dev: true
+
+  /es-module-lexer@1.5.2:
+    resolution: {integrity: sha512-l60ETUTmLqbVbVHv1J4/qj+M8nq7AwMzEcg3kmJDt9dCNrTk+yHcYFf/Kw75pMDwd9mPcIGCG5LcS20SxYRzFA==}
     dev: true
 
   /escalade@3.1.2:
@@ -7430,7 +7434,7 @@ packages:
       browserslist: 4.23.0
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.16.0
-      es-module-lexer: 1.5.0
+      es-module-lexer: 1.5.2
       eslint-scope: 5.1.1
       events: 3.3.0
       glob-to-regexp: 0.4.1
