@@ -9,8 +9,11 @@
 - [Prisma](https://www.prisma.io/): ORM
 - [pnpm](https://pnpm.io/): Package Manager
 
+## Docs
 
-You can check how to start nest graphql training here: [step by step](step-by-step.md)
+1. [Getting Started](01-getting-started.md)
+1. [Tracing Nestjs](02-tracing-nestjs.md)
+1. [Healthcheck](03-healthcheck.md)
 
 ## Upgrade packages
 
