@@ -39,7 +39,7 @@
     "@opentelemetry/sdk-node": "^0.51.0",
     "@opentelemetry/sdk-trace-base": "^1.23.0",
     "@opentelemetry/sdk-trace-node": "^1.22.0",
-    "@prisma/client": "5.13.0",
+    "@prisma/client": "5.14.0",
     "@prisma/instrumentation": "^5.12.1",
     "graphql": "16.8.1",
     "prisma": "^5.11.0",
