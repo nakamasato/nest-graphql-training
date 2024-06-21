@@ -41,7 +41,7 @@
     "@opentelemetry/sdk-trace-node": "^1.22.0",
     "@prisma/client": "5.15.0",
     "@prisma/instrumentation": "^5.12.1",
-    "graphql": "16.8.1",
+    "graphql": "16.9.0",
     "prisma": "^5.11.0",
     "reflect-metadata": "0.2.2",
     "rimraf": "5.0.7",
