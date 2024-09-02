@@ -34,7 +34,7 @@
     "@opentelemetry/instrumentation-express": "^0.40.0",
     "@opentelemetry/instrumentation-graphql": "^0.40.0",
     "@opentelemetry/instrumentation-http": "^0.52.0",
-    "@opentelemetry/instrumentation-nestjs-core": "^0.37.0",
+    "@opentelemetry/instrumentation-nestjs-core": "^0.40.0",
     "@opentelemetry/instrumentation-pg": "^0.41.0",
     "@opentelemetry/sdk-node": "^0.52.0",
     "@opentelemetry/sdk-trace-base": "^1.23.0",
