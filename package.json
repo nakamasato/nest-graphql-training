@@ -32,7 +32,7 @@
     "@opentelemetry/auto-instrumentations-node": "^0.47.0",
     "@opentelemetry/core": "^1.23.0",
     "@opentelemetry/instrumentation-express": "^0.40.0",
-    "@opentelemetry/instrumentation-graphql": "^0.40.0",
+    "@opentelemetry/instrumentation-graphql": "^0.43.0",
     "@opentelemetry/instrumentation-http": "^0.52.0",
     "@opentelemetry/instrumentation-nestjs-core": "^0.37.0",
     "@opentelemetry/instrumentation-pg": "^0.41.0",
